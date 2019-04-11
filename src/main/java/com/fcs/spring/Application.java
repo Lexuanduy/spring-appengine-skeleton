@@ -6,12 +6,15 @@ import java.util.logging.Logger;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+
+import com.fcs.filter.RequestResponseLoggingFilter;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -40,5 +43,13 @@ public class Application {
 		templateEngine.setTemplateResolver(templateResolver);
 		templateEngine.addDialect(new LayoutDialect());
 		return templateEngine;
+	}
+
+	@Bean
+	public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter() {
+		FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new RequestResponseLoggingFilter());
+		registrationBean.addUrlPatterns("/welcome");
+		return registrationBean;
 	}
 }
